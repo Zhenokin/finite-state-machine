@@ -7,7 +7,7 @@ class FSM {
         this._config = config;
         this._state = config.initial;
         this.history = [];
-        this.lastState;
+        this.lastState = [];
     }
 
     /**
@@ -26,6 +26,7 @@ class FSM {
         if (state in this._config.states) {
             this.history.push(this._state);
             this._state = state;
+            this.lastState = [];
         } else {
             throw new Error("state is not exist");
         }
@@ -39,7 +40,7 @@ class FSM {
         if (event in this._config.states[this._state].transitions) {
             this.history.push(this._state);
             this._state = this._config.states[this._state].transitions[event];
-
+            this.lastState = [];
         } else {
             throw new Error("event isn't exist")
         }
@@ -90,7 +91,7 @@ class FSM {
      */
     undo() {
         if (this.history.length) {
-            this.lastState = this.history[this.history.length - 1];
+            this.lastState.push(this._state);
             this._state = this.history.pop();
             return true;
         } else {
@@ -104,14 +105,22 @@ class FSM {
      * @returns {Boolean}
      */
     redo() {
-        if ()
-            this.history.push[this.lastState];
+        if (this.lastState.length) {
+            this.history.push(this._state);
+            this._state = this.lastState.pop();
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**
      * Clears transition history
      */
-    clearHistory() {}
+    clearHistory() {
+        this.history = [];
+    }
 }
 
 module.exports = FSM;
