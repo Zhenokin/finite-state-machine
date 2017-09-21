@@ -33,13 +33,20 @@ class FSM {
      * @param event
      */
     trigger(event) {
-        if (event in this._config.states[this._state].transitions)
+        if (event in this._config.states[this._state].transitions) {
+            this._state = this._config.states[this._state].transitions[event];
+        } else {
+            throw new Error("event isn't exist")
+        }
+
     }
 
     /**
      * Resets FSM state to initial.
      */
-    reset() {}
+    reset() {
+        this._state = this._config.initial;
+    }
 
     /**
      * Returns an array of states for which there are specified event transition rules.
