@@ -7,6 +7,7 @@ class FSM {
         this._config = config;
         this._state = config.initial;
         this.history = [];
+        this.lastState;
     }
 
     /**
@@ -23,6 +24,7 @@ class FSM {
      */
     changeState(state) {
         if (state in this._config.states) {
+            this.history.push(this._state);
             this._state = state;
         } else {
             throw new Error("state is not exist");
@@ -35,7 +37,9 @@ class FSM {
      */
     trigger(event) {
         if (event in this._config.states[this._state].transitions) {
+            this.history.push(this._state);
             this._state = this._config.states[this._state].transitions[event];
+
         } else {
             throw new Error("event isn't exist")
         }
@@ -47,6 +51,7 @@ class FSM {
      */
     reset() {
         this._state = this._config.initial;
+        this.history = [];
     }
 
     /**
@@ -83,14 +88,25 @@ class FSM {
      * Returns false if undo is not available.
      * @returns {Boolean}
      */
-    undo() {}
+    undo() {
+        if (this.history.length) {
+            this.lastState = this.history[this.history.length - 1];
+            this._state = this.history.pop();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Goes redo to state.
      * Returns false if redo is not available.
      * @returns {Boolean}
      */
-    redo() {}
+    redo() {
+        if ()
+            this.history.push[this.lastState];
+    }
 
     /**
      * Clears transition history
