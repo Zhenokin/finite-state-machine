@@ -6,6 +6,7 @@ class FSM {
     constructor(config) {
         this._config = config;
         this._state = config.initial;
+        this.history = [];
     }
 
     /**
@@ -54,7 +55,28 @@ class FSM {
      * @param event
      * @returns {Array}
      */
-    getStates(event) {}
+    getStates(event) {
+        let i = 0;
+        let statesEvent = [];
+        if (event) {
+            for (let el in this._config.states) {
+                if (event in this._config.states[el].transitions) {
+                    statesEvent[i] = el;
+                    console.log(statesEvent);
+                    i++;
+                }
+            }
+        } else {
+            for (let el in this._config.states) {
+                statesEvent[i] = el;
+
+                i++;
+            }
+
+        }
+        return statesEvent;
+
+    }
 
     /**
      * Goes back to previous state.
